@@ -1,0 +1,116 @@
+python manage.py shell
+
+>>> from news.models import *
+
+Создать двух пользователей (с помощью метода User.objects.create_user('username')).
+
+>>> a = User.objects.create_user(username='Arseniy')
+>>>
+>>> a
+<User: Arseniy>
+>>> b = User.objects.create_user(username='Maya')
+>>> b
+<User: Maya>
+
+Создать два объекта модели Author, связанные с пользователями.
+
+>>> Author.objects.create(user=a)
+<Author: Arseniy>
+>>> Author.objects.create(user=b)
+<Author: Maya>
+
+Добавить 4 категории в модель Category.
+
+>>> Category.objects.create(category_name='Sport')
+<Category: Sport>
+>>> Category.objects.create(category_name='Culture')
+<Category: Culture>
+>>> Category.objects.create(category_name='Science')
+<Category: Science>
+>>> Category.objects.create(category_name='Economy')
+<Category: Economy>
+
+Добавить 2 статьи и 1 новость.
+
+>>> auth = Author.objects.get(id=1)
+>>> auth2 = Author.objects.get(id=2)
+>>> Post.objects.create(author=auth, newsArticle='News', title='FIRE IN THE URALS: "MAGNITOGORSK" WON AT HOME AND CAME OUT AHEAD IN THE CONFRONTATION', text='Edward Pasquale became on
+e of the main creators of the victory of Metallurg in the second match of the series (after the final siren, the team recognized him as the best player of the meeting in Yekaterinburg
+), and it was he who started the third game of the Ural quarter-final of the East in the gates of Magnitogorsk. Ilya Vorobyov generally remained faithful to the principle of immutabil
+ity of the winning line-up, leaving the combinations the same.'
+... )
+>>> Post.objects.create(author=auth2, newsArticle='Article', title='Cultural values', text='Cultural values are the results of a certain work of people — things, ideas, works, images
+— capable of satisfying the needs of society or an individual.')
+>>> Post.objects.create(author=auth, newsArticle='Article', title='how did the continents of the Earth form in 100 million years', text='To understand what will happen to the Earth in
+ the future, you need to figure out what happened to it in the past.')
+
+Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+
+>>> Post.objects.get(id=1).category.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=2).category.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=3).category.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=3).category.add(Category.objects.get(id=3))
+
+Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+
+>>> Comment.objects.create(post=Post.objects.get(id=1), userComment=Author.objects.get(id=1).user, text='Interesting news about hockey!')
+>>> Comment.objects.create(post=Post.objects.get(id=2), userComment=Author.objects.get(id=2).user, text='Informative article!')
+>>> Comment.objects.create(post=Post.objects.get(id=3), userComment=Author.objects.get(id=1).user, text="It's a hard article, you have to love history to understand it.")
+>>> Comment.objects.create(post=Post.objects.get(id=2), userComment=Author.objects.get(id=2).user, text='Everyone should know the values of culture!')
+
+Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).dislike()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=4).like()
+
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=3).like()
+>>> Comment.objects.get(id=4).dislike()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=3).dislike()
+
+Обновить рейтинги пользователей.
+
+>>> a = Author.objects.get(id=1)
+>>> a.update_rating()
+>>> b = Author.objects.get(id=2)
+>>> b.update_rating()
+
+Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+
+>>> a.authorRating
+>>> a.post_set.all().values('rating')
+>>> a.user.comment_set.all().values('rating')
+>>> b.authorRating
+>>> b.post_set.all().values('rating')
+>>> b.user.comment_set.all().values('rating')
+
+>>> c = Author.objects.all().order_by('-authorRating')[:1]
+>>> for i in c:
+...     i.user.username
+...     i.authorRating
+
+Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+
+>>> p = Post.objects.all().order_by('-rating')[:1]
+>>> for z in p:
+...     f'Data : {z.dateTime.day}'
+...     f'Rating : {z.rating}'
+...     z.author.user
+...     z.preview()
+
+Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+
+>>> g = Comment.objects.all().filter(post=p)
+>>> for x in g:
+...     f'data : {x.dataTime.day}.{x.dataTime.month}.{x.dataTime.year}'
+...     x.post
+...     f'rating : {x.rating}'
+...     f'comment : {x.text}'
