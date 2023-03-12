@@ -31,6 +31,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+    objects = None
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     typContent = models.TextChoices('News', 'Article')
     newsArticle = models.CharField(blank=False, choices=typContent.choices, max_length=7)

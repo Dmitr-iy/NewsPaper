@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+News and Articles
+{% endblock title %}
+
+  {% block content %}
+  <h1>All news/articles</h1>
+  <h3>Total news : {{ titles|length }}</h3>
+  <hr>
+  {% if titles %}
+      <table>
+          <tr>
+              <td>TITLE</td>
+              <td>Data of creation</td>
+              <td>Preview</td>
+          </tr>
+          {% for title in titles %}
+          <tr>
+              <td>{{ title.title|censor }}</td>
+              <td>{{ title.dateTime|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{ title.text|truncatewords:20|censor }}</td>
+          </tr>
+          {% endfor %}
+
+      </table>
+  {% else %}
+      <h2>Not news/article</h2>
+  {% endif %}
+  {% endblock content %}
