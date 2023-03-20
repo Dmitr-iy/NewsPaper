@@ -6,27 +6,44 @@
 News and Articles
 {% endblock title %}
 
-  {% block content %}
-  <h1>All news/articles</h1>
-  <h3>Total news : {{ titles|length }}</h3>
-  <hr>
-  {% if titles %}
-      <table>
-          <tr>
-              <td>TITLE</td>
-              <td>Data of creation</td>
-              <td>Preview</td>
-          </tr>
-          {% for title in titles %}
-          <tr>
-              <td>{{ title.title|censor }}</td>
-              <td>{{ title.dateTime|date:"SHORT_DATE_FORMAT" }}</td>
-              <td>{{ title.text|truncatewords:20|censor }}</td>
-          </tr>
-          {% endfor %}
+    {% block content %}
+    <h1>All news/articles</h1>
+    <h3>Total news : {{ titles|length }}</h3>
+    <hr>
+    {% if titles %}
+        <table>
+            <tr>
+                <td>TITLE</td>
+                <td>Data of creation</td>
+                <td>Preview</td>
+            </tr>
+            {% for title in titles %}
+            <tr>
+                <td>{{ title.title|censor }}</td>
+                <td>{{ title.dateTime|date:"d.m.Y" }}</td>
+                <td>{{ title.text|truncatewords:20|censor }}</td>
+            </tr>
+            {% endfor %}
 
-      </table>
-  {% else %}
-      <h2>Not news/article</h2>
-  {% endif %}
-  {% endblock content %}
+        </table>
+    {% else %}
+        <h2>Not news/article</h2>
+    {% endif %}
+
+    {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+    {% endif %}
+
+    {{ page_obj.number }}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+    {% endblock content %}

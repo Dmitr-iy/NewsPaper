@@ -1,5 +1,8 @@
+from datetime import datetime
 
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from .filters import PostFilter
+from .forms import *
 from .models import Post
 
 
@@ -8,8 +11,31 @@ class PostList(ListView):
     ordering = 'title'
     template_name = 'heads.html'
     context_object_name = 'titles'
+    paginate_by = 2
 
 class PostDetail(DetailView):
     model = Post
     template_name = 'head.html'
     context_object_name = 'title'
+
+
+class PostSearch(ListView):
+    model = Post
+    template_name = 'search.html'
+    context_object_name = 'search'
+    queryset = Post.objects.order_by('-dateTime')
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['time_now'] = datetime.utcnow()
+        context['value1'] = None
+        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+        return context
+
+
+class PostCreate(CreateView):
+    post_form = PostForm
+    model = Post
+    template_name = 'create.html'
+
