@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+New/Article
+{% endblock title %}
+
+
+{% block content %}
+    <h1>NEW</h1>
+        <p>{{ title.title|censor }}</p>
+        <p>Data of publication : {{ title.dateTime|date:"SHORT_DATE_FORMAT" }}</p>
+        <p>{{ title.text|censor }}</p>
+
+{% endblock content %}
