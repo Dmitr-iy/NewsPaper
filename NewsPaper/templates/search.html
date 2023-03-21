@@ -7,12 +7,13 @@
 {% endblock title %}
 
 {% block content %}
+<hr>
     <form method="GET">
         {{ filter.form }}
         <input type="submit" value="To find">
     </form>
-
-            <table>
+<hr>
+            <table cellspacing="5" cellpadding="10" border="1" width="100%">
                 <tr>
                     <td>
                         <b>Name</b>
@@ -33,7 +34,7 @@
                         {{ j.title|censor }}
                     </td>
                     <td>
-                        {{ j.text|truncatechars:5|censor}}
+                        {{ j.text|truncatechars:25|censor}}
                     </td>
                     <td>
                         {{ j.author }}
@@ -44,7 +45,6 @@
                 </tr>
                 {% endfor %}
             </table>
-
 {% if is_paginated %}
 
     {% if page_obj.has_previous %}
