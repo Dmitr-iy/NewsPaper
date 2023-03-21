@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Delete
+{% endblock title %}
+
+{% block content %}
+<h1>Delete an post</h1>
+<hr>
+    <h2>Are you sure you want to delete this post?</h2>
+    <p>Title : {{ title.title| censor }}</p>
+    <p>Text : {{ title.text | censor }}</p>
+    <p>Author : {{ title.author }}</p>
+    <p>Upload date : {{ title.dateTime }}</p>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete"/>
+</form>
+{% endblock content %}
