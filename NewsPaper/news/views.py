@@ -33,7 +33,7 @@ class PostSearch(ListView):
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
-class NewsCreate(CreateView, PermissionRequiredMixin):
+class NewsCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'news.add_post'
     form_class = PostForm
     model = Post
@@ -43,13 +43,13 @@ class NewsCreate(CreateView, PermissionRequiredMixin):
         post.quantity = 'News'
         return super().form_valid(form)
 
-class PostUpdate(UpdateView, PermissionRequiredMixin):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'news.change_post'
     form_class = PostForm
     model = Post
     template_name = 'news/news_create.html'
 
-class PostDelete(DeleteView, PermissionRequiredMixin):
+class PostDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'news.delete_post'
     model = Post
     template_name = 'news/post_delete.html'
