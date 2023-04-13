@@ -8,7 +8,7 @@ from django.core.mail import EmailMultiAlternatives
 
 
 def send_notifications(preview, pk, title, subscribers, html_content=None):
-    html_context = render_to_string(
+    html_content = render_to_string(
         'post_created_email.html',
         {
             'text': preview,
