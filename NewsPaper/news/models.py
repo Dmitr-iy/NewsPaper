@@ -8,9 +8,8 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     authorRating = models.SmallIntegerField(default=0)
 
-
     def update_rating(self):
-        ratPosAuth =self.post_set.all().aggregate(RatingPost=Sum('rating'))
+        ratPosAuth = self.post_set.all().aggregate(RatingPost=Sum('rating'))
         p = 0
         p += ratPosAuth.get('RatingPost')
         ratComm = self.user.comment_set.all().aggregate(RatingComm=Sum('rating'))
@@ -25,8 +24,9 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=128, unique= True)
+    category_name = models.CharField(max_length=128, unique=True)
     subscribers = models.ManyToManyField(User, related_name='categories')
+
     def __str__(self):
         return f'{self.category_name}'
 
@@ -51,7 +51,7 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.text[0 : 128] + '...'
+        return self.text[0: 128] + '...'
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.pk)])

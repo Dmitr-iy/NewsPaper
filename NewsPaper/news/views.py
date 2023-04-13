@@ -8,12 +8,14 @@ from .forms import *
 from .models import Post, Category
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+
 class PostList(ListView):
     model = Post
     ordering = 'title'
     template_name = 'news/heads.html'
     context_object_name = 'titles'
     paginate_by = 2
+
 
 class PostDetail(DetailView):
     model = Post
@@ -35,21 +37,25 @@ class PostSearch(ListView):
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
+
 class NewsCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'news.add_post'
     form_class = PostForm
     model = Post
     template_name = 'news/news_create.html'
+
     def form_valid(self, form):
         post = form.save(commit=False)
         post.quantity = 'News'
         return super().form_valid(form)
+
 
 class PostUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'news.change_post'
     form_class = PostForm
     model = Post
     template_name = 'news/news_create.html'
+
 
 class PostDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'news.delete_post'
@@ -58,11 +64,13 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('post_list')
     context_object_name = 'title'
 
+
 class ArticlesCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'news.add_post'
     form_class = PostForm
     model = Post
     template_name = 'news/article_create.html'
+
     def form_valid(self, form):
         post = form.save(commit=False)
         post.quantity = 'Article'
@@ -75,8 +83,8 @@ class CategoryListView(ListView):
     context_object_name = 'category_news_list'
 
     def get_queryset(self):
-        self.category = get_object_or_404(Category, id = self.kwargs['pk'])
-        queryset = Post.objects.filter(category = self.category).order_by('-dateTime')
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(category=self.category).order_by('-dateTime')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -88,7 +96,7 @@ class CategoryListView(ListView):
 
 @login_required
 def subscribe(request, pk):
-    user =request.user
+    user = request.user
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
     message = 'You have subscribed to the newsletter and articles of the category'
