@@ -8,7 +8,6 @@ from .forms import *
 from .models import Post, Category
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-
 class PostList(ListView):
     model = Post
     ordering = 'title'
