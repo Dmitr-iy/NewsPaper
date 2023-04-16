@@ -3,10 +3,13 @@
 {% extends 'default.html' %}
 
 {% load custom_filters %}
+{% load cache %}
 
-{% block title %}
-New/Article
-{% endblock title %}
+{% cache 30 title %}
+    {% block title %}
+    New/Article
+    {% endblock title %}
+{% endcache %}
 
 
 {% block content %}

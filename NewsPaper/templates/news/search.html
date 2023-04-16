@@ -1,10 +1,12 @@
 {% extends 'default.html' %}
-
+{% load cache %}
 {% load custom_filters %}
 
-{% block title %}
-    <p>Search</p>
-{% endblock title %}
+{% cache 30 title %}
+    {% block title %}
+        <p>Search</p>
+    {% endblock title %}
+{% endcache %}
 
 {% block content %}
 <hr>

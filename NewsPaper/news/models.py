@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
+from django.core.cache import cache
 
 
 class Author(models.Model):
@@ -59,6 +60,10 @@ class Post(models.Model):
     def __str__(self):
         data = 'Post from {}'.format(self.dateTime.strftime('%d.%m.%Y %H:%M'))
         return f'{data}, {self.author}, {self.title}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'{self.pk}')
 
 
 class PostCategory(models.Model):

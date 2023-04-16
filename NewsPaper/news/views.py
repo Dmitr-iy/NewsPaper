@@ -7,6 +7,7 @@ from .filters import PostFilter
 from .forms import *
 from .models import Post, Category
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.cache import cache
 
 class PostList(ListView):
     model = Post
@@ -14,6 +15,13 @@ class PostList(ListView):
     template_name = 'news/heads.html'
     context_object_name = 'titles'
     paginate_by = 2
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'{self.kwargs["pk"]}', obj)
+        return obj
 
 
 class PostDetail(DetailView):

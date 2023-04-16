@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 {% extends 'default.html' %}
 {% load custom_filters %}
+{% load cache %}
 
 {% block title %}
 News and Articles
 {% endblock title %}
 
+{% cache 30 content %}
     {% block content %}
     <h1>All news/articles</h1>
     <h3>Total news : {{ titles|length }}</h3>
@@ -48,3 +50,4 @@ News and Articles
         {% endif %}
     {% endif %}
     {% endblock content %}
+{% endcache %}
