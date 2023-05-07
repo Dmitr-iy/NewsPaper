@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from news.models import Post, Category
 
-
 class Command(BaseCommand):
     help = 'deleting all news/articles of the selected category'
 
